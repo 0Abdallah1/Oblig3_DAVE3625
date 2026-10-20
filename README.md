@@ -1,14 +1,44 @@
 # Oblig3_DAVE3625
-Studyline to study best effectivley. Set your own time and rules!
 
-Exam countdown: a large banner shows the days left to your next exam.
+# Studyline
 
-Deadlines: you can add exams, assignments and other items with a course and date. The list sorts by date, shows “Tomorrow” or “3 days overdue”, lets you tick items done or delete them, and has filter tabs.
+Study planner for students: track deadlines, count down to exams and log study time.
 
-Study timer: pick 25, 45 or 60 minutes for a course and use Start, Pause, Finish and log, or Reset. It beeps when time is up.
+**Live demo:** https://0abdallah1.github.io/Oblig3_DAVE3625/
 
-Weekly study log: it totals your minutes per course this week with small bars.
+**Purpose:** Students juggle exams, assignments and study time across many courses. Studyline puts all of it in one simple page, so it is always clear what is due next and how much time has gone into each course.
 
-Saving: everything is stored in your browser’s localStorage, and a “Load example data” button fills it in for demos.
+## Features
+
+- **Exam countdown:** a large banner shows the days left to your next exam.
+- **Deadlines:** add exams, assignments and other items with a course and date. The list sorts by date, shows "Tomorrow" or "3 days overdue", lets you tick items done or delete them, and has filter tabs.
+- **Study timer:** pick 25, 45 or 60 minutes for a course and use Start, Pause, Finish and log, or Reset. It beeps when time is up.
+- **Weekly study log:** totals your minutes per course this week with small bars.
+- **Saving:** everything is stored in your browser's localStorage. A "Load example data" button fills the app with demo content.
+
+## How I built it
+
+This is a vibe-coding project for DAVE3625: I described what I wanted in natural language and let AI write the code.
+
+- **AI tool used:** Claude (claude.ai)
+- **My prompts:** I gave Claude the assignment text and chose approach A, "solve an everyday problem". Claude suggested several ideas and I picked a study planner with deadlines, exam countdown and study sessions. Claude then generated the first version as a single `index.html` file (HTML, CSS and JavaScript, no frameworks or backend).
+- **What I changed or asked AI to improve:**
+  - ✏️ Describe at least one change you made yourself, e.g. "Added a custom timer length", "Made deadlines editable", "Fixed the typo in the description".
+
+## Testing
+I opened the app in the browser and tried these cases:
+
+- [ ] ✏️ Add an exam and check the countdown banner updates
+- [ ] ✏️ Add a deadline with a date in the past (it should show "overdue")
+- [ ] ✏️ Try submitting with an empty field (the form should not submit)
+- [ ] ✏️ Tick a deadline as done, then delete one
+- [ ] ✏️ Run the timer, press "Finish and log" and check the weekly log
+- [ ] ✏️ Refresh the page and check that the data is still there
+- [ ] ✏️ Open the live demo on my phone and check the layout
+
+## Limitations / future ideas
+
+- Data is saved in the browser only, so it does not sync between devices.
+- Ideas: editing existing deadlines, custom timer length, a calendar view, and weekly plan suggestions based on upcoming deadlines.
 
 <img width="1467" height="884" alt="image" src="https://github.com/user-attachments/assets/26bbefdb-7601-4177-8950-a806e84532d4" />
