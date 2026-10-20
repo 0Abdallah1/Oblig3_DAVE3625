@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Studyline: study planner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef1f5;--card:#fff;--ink:#1b2a41;--mute:#5d6b80;--line:#d8dee8;--hi:#ffd84d;--late:#b3380a;--soon:#8a5a00;color-scheme:light}
+@media(prefers-color-scheme:dark){:root{--bg:#10161f;--card:#18212d;--ink:#e8ecf2;--mute:#97a3b6;--line:#2b3748;--late:#fb9a5c;--soon:#ffd84d;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 Figtree,system-ui,sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:28px 18px 48px}
+h1,h2,.big,.clock{font-family:"Bricolage Grotesque",Figtree,system-ui,sans-serif}
+h1{margin:0;font-size:2rem;font-weight:800;letter-spacing:-.02em}
+.tag{margin:2px 0 22px;color:var(--mute)}
+h2{margin:0 0 12px;font-size:1.15rem;font-weight:800}
+.grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:18px;align-items:start}
+.col{display:grid;gap:18px}
+@media(max-width:820px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+.hero{background:#1b2a41;color:#fff;border:0;border-radius:20px;padding:24px}
+.hero p{margin:0}.hero-s{color:#b9c4d6}.hero-t{font:800 1.4rem "Bricolage Grotesque",sans-serif;margin-bottom:4px!important}
+.hero-row{display:flex;align-items:baseline;gap:14px;margin:6px 0}
+.big{font-size:clamp(4rem,14vw,6.5rem);font-weight:800;line-height:1;background:var(--hi);color:#1b2a41;padding:0 .14em;border-radius:8px}
+.hero-u{font:500 1.4rem "Bricolage Grotesque",sans-serif}
+label{display:block;font-size:.85rem;font-weight:600;color:var(--mute);margin-bottom:3px}
+input,select,button{font:inherit;color:inherit}
+input,select{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:3px solid var(--hi);outline-offset:1px}
+.form{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.form .wide{grid-column:span 2}
+@media(max-width:560px){.form{grid-template-columns:1fr 1fr}}
+.btn{border:0;border-radius:8px;padding:10px 14px;font-weight:600;cursor:pointer;background:var(--ink);color:var(--bg)}
+.btn.hi{background:var(--hi);color:#1b2a41}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.form .btn{grid-column:1/-1}
+.tabs{display:flex;gap:6px;margin-bottom:12px}
+.tab{border:1px solid var(--line);background:transparent;border-radius:99px;padding:4px 14px;cursor:pointer}
+.tab[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+ul{list-style:none;margin:0;padding:0}
+.item{display:grid;grid-template-columns:auto 1fr auto auto;gap:12px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
+.item:first-child{border-top:0}
+.item input[type=checkbox]{width:20px;height:20px;accent-color:#1b2a41}
+.it{font-weight:600}.is{display:flex;gap:6px;flex-wrap:wrap;margin-top:3px;align-items:center}
+.when{text-align:right;font-size:.9rem;color:var(--mute)}.when strong{display:block;color:var(--ink)}
+.late .when strong{color:var(--late)}.soon .when strong{color:var(--soon)}
+.done .it{text-decoration:line-through;color:var(--mute)}.done .when strong{color:var(--mute)}
+.x{border:0;background:transparent;font-size:1.4rem;line-height:1;color:var(--mute);cursor:pointer;padding:4px 8px;border-radius:6px}
+.x:hover{color:var(--late)}
+.chip{--h:210;font-size:.78rem;font-weight:600;padding:1px 9px;border-radius:99px;background:hsl(var(--h) 70% 88%);color:hsl(var(--h) 60% 22%)}
+@media(prefers-color-scheme:dark){.chip{background:hsl(var(--h) 35% 24%);color:hsl(var(--h) 80% 82%)}}
+.kind{font-size:.78rem;color:var(--mute)}
+.empty{color:var(--mute);padding:6px 0}
+.clock{font-size:3.4rem;font-weight:800;letter-spacing:-.02em;text-align:center;margin:8px 0}
+.presets{display:flex;gap:6px;justify-content:center;margin-bottom:12px}
+.row{display:flex;gap:8px;margin-top:12px}.row .btn{flex:1}
+.log li{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:6px 0}
+.bar{height:8px;background:var(--bg);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:hsl(var(--h,210) 65% 50%);border-radius:99px}
+.total{font:800 1.6rem "Bricolage Grotesque",sans-serif;margin:0 0 8px}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.on{opacity:1}
+footer{margin-top:22px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--mute);font-size:.85rem}
+footer button{background:none;border:0;color:var(--mute);text-decoration:underline;cursor:pointer;padding:0}
+@media(prefers-reduced-motion:reduce){.toast{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Studyline</h1>
+  <p class="tag">Deadlines, exams and study time in one place.</p>
+  <div class="grid">
+    <div class="col">
+      <section class="hero" id="hero" aria-live="polite"></section>
+
+      <section class="card">
+        <h2>Add a deadline</h2>
+        <form class="form" id="form">
+          <div class="wide"><label for="title">What is due?</label><input id="title" required maxlength="80" placeholder="Final exam, Assignment 2…"></div>
+          <div><label for="course">Course</label><input id="course" list="courses" required maxlength="30" placeholder="Databases"></div>
+          <div><label for="type">Type</label><select id="type"><option>Exam</option><option>Assignment</option><option>Other</option></select></div>
+          <div class="wide"><label for="date">Date</label><input id="date" type="date" required></div>
+          <button class="btn hi" type="submit">Add deadline</button>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2>Deadlines</h2>
+        <div class="tabs" role="group" aria-label="Filter deadlines">
+          <button class="tab" data-f="all" aria-pressed="true">All</button>
+          <button class="tab" data-f="exam" aria-pressed="false">Exams</button>
+          <button class="tab" data-f="work" aria-pressed="false">Assignments and other</button>
+        </div>
+        <ul id="list"></ul>
+      </section>
+    </div>
+
+    <div class="col">
+      <section class="card">
+        <h2>Study session</h2>
+        <label for="tcourse">Course</label>
+        <input id="tcourse" list="courses" maxlength="30" placeholder="Databases">
+        <div class="clock" id="clock" role="timer">25:00</div>
+        <div class="presets" id="presets">
+          <button class="tab" data-m="25" aria-pressed="true">25 min</button>
+          <button class="tab" data-m="45" aria-pressed="false">45 min</button>
+          <button class="tab" data-m="60" aria-pressed="false">60 min</button>
+        </div>
+        <div class="row">
+          <button class="btn hi" id="start">Start</button>
+          <button class="btn" id="finish" disabled>Finish and log</button>
+        </div>
+        <div class="row"><button class="btn ghost" id="reset">Reset timer</button></div>
+      </section>
+
+      <section class="card">
+        <h2>This week</h2>
+        <p class="total" id="weektot">0 min</p>
+        <ul class="log" id="log"></ul>
+      </section>
+    </div>
+  </div>
+  <footer><span>Your data is saved in this browser only.</span><button id="clear">Clear all data</button></footer>
+</div>
+<datalist id="courses"></datalist>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const KEY = 'studyline.v1';
+let state = { items: [], sessions: [] };
+try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && Array.isArray(s.items) && Array.isArray(s.sessions)) state = s; } catch (e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} };
+const $ = id => document.getElementById(id);
+const uid = () => Math.random().toString(36).slice(2, 9);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const todayMid = () => { const d = new Date(); d.setHours(0, 0, 0, 0); return d; };
+const iso = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+const addDays = n => { const d = todayMid(); d.setDate(d.getDate() + n); return iso(d); };
+const parseD = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+const daysLeft = s => Math.round((parseD(s) - todayMid()) / 864e5);
+const fmt = s => parseD(s).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+const hue = s => { let h = 0; for (const c of s) h = (h * 31 + c.charCodeAt(0)) % 360; return h; };
+const chip = c => `<span class="chip" style="--h:${hue(c)}">${esc(c)}</span>`;
+const hm = m => m >= 60 ? `${Math.floor(m / 60)} h ${m % 60} min` : `${m} min`;
+const label = n => n === 0 ? 'Today' : n === 1 ? 'Tomorrow' : n === -1 ? '1 day overdue' : n < 0 ? `${-n} days overdue` : `In ${n} days`;
+let toastT;
+const toast = msg => { const t = $('toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 2200); };
+
+let filter = 'all';
+
+function renderHero() {
+  const ex = state.items.filter(i => i.type === 'Exam' && !i.done && daysLeft(i.date) >= 0).sort((a, b) => a.date.localeCompare(b.date))[0];
+  if (!ex) { $('hero').innerHTML = '<p class="hero-t">No upcoming exam</p><p class="hero-s">Add an exam below and the countdown starts here.</p>'; return; }
+  const n = daysLeft(ex.date);
+  $('hero').innerHTML = `<p class="hero-s">Next exam: ${esc(ex.course)}</p>
+    <div class="hero-row"><span class="big">${n === 0 ? 'Today' : n}</span>${n === 0 ? '' : `<span class="hero-u">${n === 1 ? 'day' : 'days'} left</span>`}</div>
+    <p class="hero-s">${esc(ex.title)}, ${fmt(ex.date)}</p>`;
+}
+
+function renderList() {
+  const items = state.items
+    .filter(i => filter === 'all' || (filter === 'exam' ? i.type === 'Exam' : i.type !== 'Exam'))
+    .sort((a, b) => (a.done - b.done) || a.date.localeCompare(b.date));
+  if (!items.length) {
+    $('list').innerHTML = `<li class="empty">Nothing here yet. Add your first deadline above${state.items.length ? '' : ', or <button class="btn ghost" id="demo">load example data</button>'}.</li>`;
+    return;
+  }
+  $('list').innerHTML = items.map(i => {
+    const n = daysLeft(i.date);
+    const cls = i.done ? 'done' : n < 0 ? 'late' : n <= 3 ? 'soon' : '';
+    return `<li class="item ${cls}" data-id="${i.id}">
+      <input type="checkbox" ${i.done ? 'checked' : ''} aria-label="Mark ${esc(i.title)} as done">
+      <div><div class="it">${esc(i.title)}</div><div class="is">${chip(i.course)}<span class="kind">${esc(i.type)}</span></div></div>
+      <div class="when"><strong>${i.done ? 'Done' : label(n)}</strong><span>${fmt(i.date)}</span></div>
+      <button class="x" aria-label="Delete ${esc(i.title)}">×</button></li>`;
+  }).join('');
+}
+
+function renderCourses() {
+  const set = new Set([...state.items.map(i => i.course), ...state.sessions.map(s => s.course)]);
+  $('courses').innerHTML = [...set].map(c => `<option value="${esc(c)}">`).join('');
+}
+
+function weekStart() { const d = todayMid(); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return d.getTime(); }
+
+function renderLog() {
+  const ws = weekStart(), by = {}; let tot = 0;
+  state.sessions.filter(s => s.ts >= ws).forEach(s => { by[s.course] = (by[s.course] || 0) + s.minutes; tot += s.minutes; });
+  const rows = Object.entries(by).sort((a, b) => b[1] - a[1]);
+  const max = rows.length ? rows[0][1] : 1;
+  $('weektot').textContent = hm(tot);
+  $('log').innerHTML = rows.length
+    ? rows.map(([c, m]) => `<li>${chip(c)}<div class="bar"><i style="width:${m / max * 100}%;--h:${hue(c)}"></i></div><span>${hm(m)}</span></li>`).join('')
+    : '<li class="empty">No sessions yet this week. Start the timer to log one.</li>';
+}
+
+const render = () => { renderHero(); renderList(); renderCourses(); renderLog(); };
+
+// Deadlines
+$('date').value = addDays(7);
+$('form').addEventListener('submit', e => {
+  e.preventDefault();
+  state.items.push({ id: uid(), title: $('title').value.trim(), course: $('course').value.trim(), type: $('type').value, date: $('date').value, done: false });
+  save(); render();
+  $('title').value = ''; $('title').focus();
+  toast('Deadline added');
+});
+$('list').addEventListener('change', e => {
+  const li = e.target.closest('.item'); if (!li) return;
+  const it = state.items.find(i => i.id === li.dataset.id); if (it) { it.done = e.target.checked; save(); render(); }
+});
+$('list').addEventListener('click', e => {
+  if (e.target.id === 'demo') {
+    state.items.push(
+      { id: uid(), title: 'Final exam', course: 'Databases', type: 'Exam', date: addDays(9), done: false },
+      { id: uid(), title: 'Midterm exam', course: 'Statistics', type: 'Exam', date: addDays(21), done: false },
+      { id: uid(), title: 'Assignment 3', course: 'Programming', type: 'Assignment', date: addDays(2), done: false },
+      { id: uid(), title: 'Lab report', course: 'Statistics', type: 'Assignment', date: addDays(-1), done: false });
+    state.sessions.push({ id: uid(), course: 'Databases', minutes: 50, ts: Date.now() }, { id: uid(), course: 'Programming', minutes: 25, ts: Date.now() });
+    save(); render(); return;
+  }
+  const del = e.target.closest('.x'); if (!del) return;
+  const id = del.closest('.item').dataset.id;
+  state.items = state.items.filter(i => i.id !== id); save(); render(); toast('Deadline deleted');
+});
+document.querySelectorAll('.tabs:not(#presets) .tab').forEach(b => b.addEventListener('click', () => {
+  filter = b.dataset.f;
+  document.querySelectorAll('.tabs:not(#presets) .tab').forEach(x => x.setAttribute('aria-pressed', x === b));
+  renderList();
+}));
+
+// Study timer (uses timestamps so it stays accurate in background tabs)
+const T = { total: 25 * 60, left: 25 * 60, running: false, end: 0, iv: null };
+function drawClock() {
+  const m = String(Math.floor(T.left / 60)).padStart(2, '0'), s = String(T.left % 60).padStart(2, '0');
+  $('clock').textContent = `${m}:${s}`;
+  document.title = T.running ? `${m}:${s} Studyline` : 'Studyline: study planner';
+  $('start').textContent = T.running ? 'Pause' : (T.left < T.total ? 'Resume' : 'Start');
+  $('finish').disabled = T.total - T.left < 60;
+}
+function tick() {
+  T.left = Math.max(0, Math.round((T.end - Date.now()) / 1000));
+  drawClock();
+  if (T.left === 0) { beep(); logSession('Time is up. Session logged.'); }
+}
+function beep() { try { const a = new (window.AudioContext || window.webkitAudioContext)(), o = a.createOscillator(); o.frequency.value = 880; o.connect(a.destination); o.start(); setTimeout(() => { o.stop(); a.close(); }, 400); } catch (e) {} }
+function stopTimer() { clearInterval(T.iv); T.running = false; }
+function resetTimer() { stopTimer(); T.left = T.total; drawClock(); }
+function logSession(msg) {
+  stopTimer();
+  const minutes = Math.floor((T.total - T.left) / 60);
+  if (minutes < 1) { toast('Study for at least 1 minute to log a session'); return; }
+  state.sessions.push({ id: uid(), course: $('tcourse').value.trim() || 'General', minutes, ts: Date.now() });
+  save(); resetTimer(); render(); toast(msg || `Logged ${minutes} min`);
+}
+$('start').addEventListener('click', () => {
+  if (T.running) { tick(); stopTimer(); drawClock(); return; }
+  T.running = true; T.end = Date.now() + T.left * 1000; T.iv = setInterval(tick, 250); drawClock();
+});
+$('finish').addEventListener('click', () => logSession());
+$('reset').addEventListener('click', resetTimer);
+$('presets').addEventListener('click', e => {
+  const b = e.target.closest('.tab'); if (!b) return;
+  document.querySelectorAll('#presets .tab').forEach(x => x.setAttribute('aria-pressed', x === b));
+  T.total = +b.dataset.m * 60; resetTimer();
+});
+
+$('clear').addEventListener('click', () => {
+  if (confirm('Delete all deadlines and study sessions? This cannot be undone.')) { state = { items: [], sessions: [] }; save(); render(); toast('All data cleared'); }
+});
+
+render(); drawClock();
+</script>
+</body>
+</html>
