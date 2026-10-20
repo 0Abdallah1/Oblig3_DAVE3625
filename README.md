@@ -16,15 +16,6 @@ Study planner for students: track deadlines, count down to exams and log study t
 - **Weekly study log:** totals your minutes per course this week with small bars.
 - **Saving:** everything is stored in your browser's localStorage. A "Load example data" button fills the app with demo content.
 
-## How I built it
-
-This is a vibe-coding project for DAVE3625: I described what I wanted in natural language and let AI write the code.
-
-- **AI tool used:** Claude (claude.ai)
-- **My prompts:** I gave Claude the assignment text and chose approach A, "solve an everyday problem". Claude suggested several ideas and I picked a study planner with deadlines, exam countdown and study sessions. Claude then generated the first version as a single `index.html` file (HTML, CSS and JavaScript, no frameworks or backend).
-- **What I changed or asked AI to improve:**
-  - ✏️ Describe at least one change you made yourself, e.g. "Added a custom timer length", "Made deadlines editable", "Fixed the typo in the description".
-
 ## Testing
 I opened the app in the browser and tried these cases:
 
